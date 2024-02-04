@@ -22,26 +22,26 @@ header {
 .logo h1 {
     margin-left: 10px;
     font-size: 1.3em;
-    color: white; /* Assurez-vous que le logo est blanc */
+    color: white;
 }
+
 .logo h1 .icon-circle {
-    position: relative;
-    font-size: 0.8em; /* Ajustez la taille du cercle extérieur selon vos besoins */
-    vertical-align: middle; /* Pour aligner le cercle avec le texte */
-    color: white; /* La couleur du cercle extérieur */
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .logo h1 .icon-circle .fa-circle {
-    color: transparent; /* Rend la couleur du cercle extérieur transparente, ne montrant que le bord */
+    color: white; /* Cette couleur est pour la bordure */
+    -webkit-text-stroke: 0.08em black; /* Crée une bordure pour l'icône du cercle */
 }
 
 .logo h1 .icon-circle .dot {
     position: absolute;
-    color: black; /* La couleur du point central */
-    font-size: 0.25em; /* Ajustez la taille du point central selon vos besoins */
+    color: black;
+    font-size: 0.25em;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Centre le point dans le cercle */
+    transform: translate(-50%, -50%);
 }
 
 .header-content {
