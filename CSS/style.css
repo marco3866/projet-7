@@ -3,7 +3,7 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #fff; /* Couleur de fond si l'image ne se charge pas */
+    background-color: #ebe7e7; /* Couleur de fond si l'image ne se charge pas */
 }
 
 header {
@@ -99,4 +99,37 @@ header {
     color: grey; /* Icône grise comme demandé */
     font-size: 1em; /* Taille de l'icône */
 }
+.filters-container {
+    width: 80%; /* Définit la largeur à 80% de la largeur de son conteneur */
+    margin: 0 auto; /* Centre la div horizontalement */
+    display: flex; /* Utilisez flexbox pour aligner les éléments à l'intérieur */
+    justify-content: space-between; /* Répartit l'espace entre les éléments de manière égale */
+    align-items: center; /* Centre les éléments verticalement */
+    padding: 20px 0; /* Ajoute un peu d'espace au-dessus et en dessous pour esthétique */
+    /* Ajoutez d'autres styles comme l'arrière-plan, les bordures, etc., si nécessaire */
+}
 
+.filter-button {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 20px; /* Boutons avec des bords arrondis */
+    background-color: white;
+    cursor: pointer;
+    position: relative; /* Nécessaire pour positionner la flèche de façon absolue */
+    margin-right: 10px; /* Espace entre les boutons */
+}
+
+.filter-button i {
+    margin-left: 5px; /* Espace entre le texte du bouton et la flèche */
+}
+
+.recipes-count {
+    margin-left: auto; /* Pousse le texte "1500 RECETTES" à droite */
+    font-weight: bold;
+}
+.recipes-container {
+    width: 80%; /* Définit la largeur à 80% de la largeur de son conteneur */
+    margin: 20px auto; /* Centre la div horizontalement et ajoute une marge en haut et en bas */
+    padding: 20px; /* Ajoute de l'espace à l'intérieur de la div pour l'esthétique */
+    /* Ici, vous pouvez ajouter d'autres styles comme l'arrière-plan, les bordures, etc. */
+}
