@@ -1,0 +1,102 @@
+/* style.css */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff; /* Couleur de fond si l'image ne se charge pas */
+}
+
+header {
+    background-size: cover;
+    color: white;
+    padding: 20px 0; /* Ajoutez un padding pour le header */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.logo h1 {
+    margin-left: 10px;
+    font-size: 1.3em;
+    color: white; /* Assurez-vous que le logo est blanc */
+}
+.logo h1 .icon-circle {
+    position: relative;
+    font-size: 0.8em; /* Ajustez la taille du cercle extérieur selon vos besoins */
+    vertical-align: middle; /* Pour aligner le cercle avec le texte */
+    color: white; /* La couleur du cercle extérieur */
+}
+
+.logo h1 .icon-circle .fa-circle {
+    color: transparent; /* Rend la couleur du cercle extérieur transparente, ne montrant que le bord */
+}
+
+.logo h1 .icon-circle .dot {
+    position: absolute;
+    color: black; /* La couleur du point central */
+    font-size: 0.25em; /* Ajustez la taille du point central selon vos besoins */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centre le point dans le cercle */
+}
+
+.header-content {
+    text-align: center; /* Centre le contenu du header */
+    color: rgb(252, 252, 6); /* Couleur du texte pour les titres */
+    margin-top: 20px; /* Espace au-dessus du contenu du header */
+}
+
+.header-content h2 {
+    font-size: 1.5em; /* Taille du texte plus grande pour le titre */
+}
+
+.header-content h3 {
+    font-size: 1.2em; /* Taille du texte pour le sous-titre */
+}
+
+.search-container {
+    position: relative;
+    max-width: 70%; /* La largeur maximale de la barre de recherche par rapport à son conteneur */
+    margin: 20px auto; /* Centrer la barre de recherche horizontalement avec une marge de 20px en haut et en bas */
+}
+
+.search-container input,
+.search-button {
+    height: 40px; /* Exemple de hauteur, ajustez selon vos besoins */
+    padding: 8px 16px; /* Ajustez le padding pour qu'il soit identique sur l'input et le bouton */
+    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur/hauteur totales */
+}
+.search-container input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding-right: 40px; /* Faites de la place pour l'icône de recherche */
+}
+
+.search-button {
+    position: absolute;
+    right: 5px; /* Alignez à droite */
+    top: 50%; /* Positionnez à 50% du haut du conteneur */
+    transform: translateY(-50%); /* Déplacez le bouton de 50% de sa hauteur vers le haut pour le centrer verticalement */
+    background-color: black; /* Fond noir pour le bouton */
+    border: none;
+    border-radius: 0 5px 5px 0; /* Arrondi seulement sur les coins droit */
+    cursor: pointer;
+    height: 36px; /* Hauteur du bouton légèrement inférieure pour l'espacement en haut et en bas */
+    width: 50px; /* Largeur fixe pour le bouton */
+    display: flex; /* Utilisez flexbox pour centrer l'icône */
+    justify-content: center; /* Centre horizontalement l'icône dans le bouton */
+    align-items: center; /* Centre verticalement l'icône dans le bouton */
+    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur/hauteur totales */
+}
+
+.search-button .fa-search {
+    color: grey; /* Icône grise comme demandé */
+    font-size: 1em; /* Taille de l'icône */
+}
+
