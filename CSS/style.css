@@ -143,6 +143,8 @@ header {
     margin-bottom: 10px;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
 }
 
 .recipe-image {
@@ -158,53 +160,68 @@ header {
 
 .recipe-time {
     position: absolute;
-    top: 0;
-    right: 0;
-    background-color: #fff;
-    padding: 5px;
+    padding: 10px;
+    top: 10px; /* Ajustez la position en haut à votre convenance */
+    right: 10px; /* Ajustez la position à droite à votre convenance */
+    background-color: #ffeb3b; /* Couleur de fond jaune */
+    color: #000; /* Couleur du texte noir */
+    padding: 5px 10px; /* Ajustez le padding pour un meilleur rendu */
+    border-radius: 15px; /* Les coins arrondis */
+    font-weight: bold; /* Texte en gras */
+    font-size: 0.9em; /* Taille du texte ajustée */
 }
+
 
 .recipe-name {
     font-weight: bold;
     padding: 5px;
     background-color: #f5f5f5;
     text-align: center;
-    margin: 5px 0;
 }
 
 .recipe-details {
-    margin: 5px;
     padding: 5px;
     font-size: 0.8em;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .recipe-description-title,
 .recipe-ingredients-title {
     color: grey;
-    margin-bottom: 10px;
+    margin: 10px 0;
 }
 
-.recipe-description {
-    margin-bottom: 20px;
+.recipe-description,
+.recipe-ingredients {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3; /* Number of lines to show */
 }
 
 .recipe-ingredients {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 5px;
-    row-gap: 5px;
-    font-size: 0.8em;
+    grid-template-columns: repeat(2, 1fr); /* Crée deux colonnes */
+    gap: 5px; /* Ajuste l'écart entre les colonnes */
+    overflow: hidden; /* Empêche le contenu de déborder */
 }
 
 .ingredient {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    justify-content: center; /* Centre le contenu verticalement */
+    overflow: hidden; /* Empêche le contenu de déborder */
+    text-overflow: ellipsis; /* Ajoute des points de suspension si le texte est trop long */
 }
 
 .ingredient-name {
     font-weight: bold;
-    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .ingredient-details {
@@ -216,14 +233,15 @@ header {
 .ingredient-quantity,
 .ingredient-unit {
     margin-right: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+/* Classes for hidden elements */
 .recipe-info .servings,
 .recipe-info .appliance,
-.recipe-info .ustensils {
-    display: none;
-}
-
+.recipe-info .ustensils,
 .recipe-id {
     display: none;
 }
