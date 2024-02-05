@@ -25,28 +25,12 @@ header {
     color: white;
 }
 
-.logo h1 .icon-circle {
-    display: inline-block;
-    vertical-align: middle;
+.icon-circle {
+    font-size: 15px;
 }
-
-.logo h1 .icon-circle .fa-circle {
-    color: white; /* Cette couleur est pour la bordure */
-    -webkit-text-stroke: 0.08em black; /* Crée une bordure pour l'icône du cercle */
-}
-
-.logo h1 .icon-circle .dot {
-    position: absolute;
-    color: black;
-    font-size: 0.25em;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
 .header-content {
     text-align: center; /* Centre le contenu du header */
-    color: rgb(252, 252, 6); /* Couleur du texte pour les titres */
+    color: #FFD15B; /* Couleur du texte pour les titres */
     margin-top: 20px; /* Espace au-dessus du contenu du header */
 }
 
@@ -80,7 +64,7 @@ header {
 
 .search-button {
     position: absolute;
-    right: 5px; /* Alignez à droite */
+    right: 8px; /* Alignez à droite */
     top: 50%; /* Positionnez à 50% du haut du conteneur */
     transform: translateY(-50%); /* Déplacez le bouton de 50% de sa hauteur vers le haut pour le centrer verticalement */
     background-color: black; /* Fond noir pour le bouton */
@@ -88,7 +72,7 @@ header {
     border-radius: 0 5px 5px 0; /* Arrondi seulement sur les coins droit */
     cursor: pointer;
     height: 36px; /* Hauteur du bouton légèrement inférieure pour l'espacement en haut et en bas */
-    width: 50px; /* Largeur fixe pour le bouton */
+    width: 30px; /* Largeur fixe pour le bouton */
     display: flex; /* Utilisez flexbox pour centrer l'icône */
     justify-content: center; /* Centre horizontalement l'icône dans le bouton */
     align-items: center; /* Centre verticalement l'icône dans le bouton */
@@ -141,21 +125,26 @@ header {
     width: 30%;
     height: 500px;
     margin-bottom: 10px;
-    background-color: #fff;
+    background-color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
+    border-radius: 8px;
 }
 
 .recipe-image {
     height: 40%;
     position: relative;
+    border-radius: 8px;
+    background-color: white;
 }
 
 .recipe-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
 .recipe-time {
@@ -163,7 +152,7 @@ header {
     padding: 10px;
     top: 10px; /* Ajustez la position en haut à votre convenance */
     right: 10px; /* Ajustez la position à droite à votre convenance */
-    background-color: #ffeb3b; /* Couleur de fond jaune */
+    background-color: #FFD15B; /* Couleur de fond jaune */
     color: #000; /* Couleur du texte noir */
     padding: 5px 10px; /* Ajustez le padding pour un meilleur rendu */
     border-radius: 15px; /* Les coins arrondis */
@@ -175,7 +164,7 @@ header {
 .recipe-name {
     font-weight: bold;
     padding: 5px;
-    background-color: #f5f5f5;
+    background-color: #ffffff;
     text-align: center;
 }
 
