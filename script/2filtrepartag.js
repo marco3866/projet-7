@@ -1,3 +1,8 @@
+let activeTags = {
+    ingredients: new Set(),
+    appliance: new Set(),
+    ustensils: new Set()
+};
 // Parcourir chaque recette et extraire les données
 document.addEventListener("DOMContentLoaded", () => {
     const dropdownIngredients = document.querySelector('.dropdown-ingredients');
@@ -23,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Fonction pour filtrer les recettes par tag
+
 function filterRecipesByTag(tag, category) {
     // Filtrer les recettes en fonction de la catégorie et du tag sélectionné
     const filteredRecipes = recipes.filter(recipe => {
@@ -39,31 +45,63 @@ function filterRecipesByTag(tag, category) {
     // Afficher les recettes filtrées
     displayRecipes(filteredRecipes);
 }
+
 // Cette fonction ajoutera le tag sélectionné dans le conteneur approprié
+// Fonction pour afficher le tag sélectionné et gérer la suppression
 function displaySelectedTag(tagText, category) {
-    const selectedTagContainer = document.querySelector('.selected-tags-container');
+    const selectedTagContainer = document.querySelector(`.${category}-selected-tags`);
     if (!selectedTagContainer) {
-        console.error('Le conteneur pour les tags sélectionnés est introuvable.');
+        console.error(`Le conteneur pour les tags sélectionnés de la catégorie '${category}' est introuvable.`);
         return;
     }
 
     const tag = document.createElement('div');
     tag.className = 'selected-tag';
     tag.textContent = tagText;
-
-    // Ajouter un attribut de catégorie au tag sélectionné pour pouvoir filtrer ou supprimer plus tard
-    tag.setAttribute('data-category', category);
+    tag.dataset.category = category;
 
     const removeButton = document.createElement('span');
     removeButton.textContent = '×';
     removeButton.className = 'remove-selected-tag';
-    removeButton.onclick = function() {
+    removeButton.addEventListener('click', () => {
+        // Suppression du tag des actifs
+        activeTags[category].delete(tagText);
+        // Suppression du tag de l'affichage
         tag.remove();
-        // Mettre à jour l'affichage des recettes ici si nécessaire
-    };
+        // Mise à jour de l'affichage des recettes
+        updateDisplayedRecipes();
+    });
 
     tag.appendChild(removeButton);
     selectedTagContainer.appendChild(tag);
+}
+// III UPDATE AFTER FILTER 
+function updateDisplayedRecipes() {
+    const filteredRecipes = recipes.filter(recipe => {
+        const ingredientMatch = [...activeTags.ingredients].every(ingredient => 
+            recipe.ingredients.some(ing => ing.ingredient === ingredient));
+        const applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
+        const utensilMatch = [...activeTags.ustensils].every(utensil => recipe.ustensils.includes(utensil));
+
+        return ingredientMatch && applianceMatch && utensilMatch;
+    });
+
+    // Afficher les recettes filtrées
+    displayRecipes(filteredRecipes);
+}
+
+// Fonction pour ajouter un tag aux filtres actifs
+function addActiveTag(tag, category) {
+    activeTags[category].add(tag);
+    updateDisplayedRecipes();
+}
+
+function removeActiveTag(tag, category) {
+    // Vérifier si le tag existe dans la catégorie spécifiée et le supprimer
+    if (activeTags[category].has(tag)) {
+        activeTags[category].delete(tag);
+        updateDisplayedRecipes(); // Mettre à jour l'affichage des recettes après la suppression d'un tag
+    }
 }
 // Fonction pour créer un tag et attacher un gestionnaire d'événement de clic
 function createTag(text, category) {
