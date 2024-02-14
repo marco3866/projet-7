@@ -83,29 +83,6 @@ header {
     color: grey; /* Icône grise comme demandé */
     font-size: 1em; /* Taille de l'icône */
 }
-.filters-container {
-    width: 80%; /* Définit la largeur à 80% de la largeur de son conteneur */
-    margin: 0 auto; /* Centre la div horizontalement */
-    display: flex; /* Utilisez flexbox pour aligner les éléments à l'intérieur */
-    justify-content: space-between; /* Répartit l'espace entre les éléments de manière égale */
-    align-items: center; /* Centre les éléments verticalement */
-    padding: 20px 0; /* Ajoute un peu d'espace au-dessus et en dessous pour esthétique */
-    /* Ajoutez d'autres styles comme l'arrière-plan, les bordures, etc., si nécessaire */
-}
-
-.filter-button {
-    padding: 10px 20px;
-    border: 1px solid #ccc;
-    border-radius: 20px; /* Boutons avec des bords arrondis */
-    background-color: white;
-    cursor: pointer;
-    position: relative; /* Nécessaire pour positionner la flèche de façon absolue */
-    margin-right: 10px; /* Espace entre les boutons */
-}
-
-.filter-button i {
-    margin-left: 5px; /* Espace entre le texte du bouton et la flèche */
-}
 
 .recipes-count {
     margin-left: auto; /* Pousse le texte "1500 RECETTES" à droite */
@@ -117,8 +94,8 @@ header {
     padding: 20px;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    justify-content: space-between;
+    gap: 36px;
+    justify-content: flex-start; /* pour car 1 a 1 */
 }
 
 .recipe-card {
@@ -233,4 +210,124 @@ header {
 .recipe-info .ustensils,
 .recipe-id {
     display: none;
+}
+
+
+/* FILTRE DISPO */
+
+/* Style de base pour les filtres */
+/* Base styles for the filter container */
+.filters-container {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    position: relative;
+}
+
+.filter {
+    position: relative; /* Necessary for absolute positioning of the dropdown */
+}
+
+.filter-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #333;
+    outline: none;
+    display: inline-flex; /* Align the icon within the button */
+    align-items: center;
+}
+
+.filter-button i {
+    margin-left: 5px;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 100%; /* Set width to match the container or button */
+    top: 100%; /* Position directly below the filter button */
+    left: 0; /* Align to the left edge of the filter button */
+}
+
+.show {
+    display: flex; /* Show the dropdown */
+    flex-direction: column;
+}
+
+.search-box {
+    position: relative;
+    width: 65%; /* Ajustez en fonction de la taille de votre menu déroulant */
+}
+
+.search-input {
+    width: 100%;
+    padding: 5px 35px 5px 10px; /* Espace pour l'icône à droite */
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    left: 100px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ccc;
+}
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tag {
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.8em;
+    color: #333;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tag:hover {
+    background-color: #ffca28;
+}
+
+/* Style pour les tags sélectionnés */
+.selected-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.selected-tag {
+    display: flex;
+    align-items: center;
+    background-color: #ffd54f; /* Couleur de fond des tags */
+    color: #333; /* Couleur du texte des tags */
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 5px; /* Espace entre les tags */
+}
+
+/* Bouton pour supprimer le tag */
+.remove-selected-tag {
+    display: inline-block;
+    margin-left: 10px;
+    color: #333; /* Couleur du texte pour le bouton supprimer */
+    cursor: pointer;
 }

@@ -26,13 +26,70 @@
         </div>
     </header>
 
-    <!-- Le reste du contenu de la page ici -->
-    <div class="filters-container">
-        <button class="filter-button">Ingrédients <i class="fas fa-chevron-down"></i></button>
-        <button class="filter-button">Appareils <i class="fas fa-chevron-down"></i></button>
-        <button class="filter-button">Ustensiles <i class="fas fa-chevron-down"></i></button>
-        <span class="recipes-count">1500 RECETTES</span>
+<!-- Le reste du contenu de la page ici -->
+<div class="filters-container">
+<!-- Filtre pour les ingrédients -->
+<div class="filter" data-category="ingredients">
+    <button class="filter-button">Ingrédients <i class="fas fa-chevron-down"></i></button>
+    <div class="dropdown-ingredients dropdown-menu">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        <div class="tags-container">
+            <!-- Les tags d'ingrédients seront ajoutés ici par JS -->
+        </div>
     </div>
+    <!-- Conteneur pour les tags d'ingrédients sélectionnés -->
+    <div class="selected-tags-container ingredients-selected-tags">
+        <!-- Les tags sélectionnés d'ingrédients seront ajoutés ici par JS -->
+    </div>
+</div>
+
+<!-- Filtre pour les appareils -->
+<div class="filter" data-category="appliances">
+    <button class="filter-button">Appareils <i class="fas fa-chevron-down"></i></button>
+    <div class="dropdown-appliances dropdown-menu">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        <div class="tags-container">
+            <!-- Les tags d'appareils seront ajoutés ici par JS -->
+        </div>
+    </div>
+    <!-- Conteneur pour les tags d'appareils sélectionnés -->
+    <div class="selected-tags-container appliances-selected-tags">
+        <!-- Les tags sélectionnés d'appareils seront ajoutés ici par JS -->
+    </div>
+</div>
+
+<!-- Filtre pour les ustensiles -->
+<div class="filter" data-category="ustensils">
+    <button class="filter-button">Ustensiles <i class="fas fa-chevron-down"></i></button>
+    <div class="dropdown-utensils dropdown-menu">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        <div class="tags-container">
+            <!-- Les tags d'ustensiles seront ajoutés ici par JS -->
+        </div>
+    </div>
+    <!-- Conteneur pour les tags d'ustensiles sélectionnés -->
+    <div class="selected-tags-container utensils-selected-tags">
+        <!-- Les tags sélectionnés d'ustensiles seront ajoutés ici par JS -->
+    </div>
+</div>
+
+    <!-- Conteneur pour les tags sélectionnés -->
+    <div class="selected-tags-container">
+        <!-- Les tags sélectionnés seront ajoutés ici par JS -->
+    </div>
+    
+    <!-- Affichage du nombre total de recettes -->
+    <span class="recipes-count"></span>
+</div>
 
     <div class="recipes-container">
         <!-- Les cartes de recettes générées dynamiquement seront placées ici 
@@ -42,5 +99,7 @@
 
     <script src="script/recipes.js"></script>
     <script src="script/placerlesrecettes.js"></script> <!-- Script pour manipuler les recettes -->
+    <script src="script/1ajoutertagfiltre.js"></script> <!-- Script pour ajouter les tags -->
+    <script src="script/2filtrepartag.js"></script> <!-- Script pour filtrer les tags -->
 </body>
 </html>
