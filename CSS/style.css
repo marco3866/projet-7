@@ -94,8 +94,8 @@ header {
     padding: 20px;
     display: flex;
     flex-wrap: wrap;
-    gap: 36px;
-    justify-content: flex-start; /* pour car 1 a 1 */
+    gap: 45px;
+    justify-content: flex-start; /* Aligner les cartes à gauche */
 }
 
 .recipe-card {

@@ -46,36 +46,37 @@ function filterRecipesByTag(tag, category) {
     displayRecipes(filteredRecipes);
 }
 
-// Cette fonction ajoutera le tag sélectionné dans le conteneur approprié
+
 // Fonction pour afficher le tag sélectionné et gérer la suppression
 function displaySelectedTag(tagText, category) {
-    const selectedTagContainer = document.querySelector(`.${category}-selected-tags`);
+    const selectedTagContainer = document.querySelector('.selected-tags-container');
     if (!selectedTagContainer) {
-        console.error(`Le conteneur pour les tags sélectionnés de la catégorie '${category}' est introuvable.`);
+        console.error('Le conteneur pour les tags sélectionnés est introuvable.');
         return;
     }
 
     const tag = document.createElement('div');
     tag.className = 'selected-tag';
     tag.textContent = tagText;
-    tag.dataset.category = category;
+    tag.setAttribute('data-category', category);
 
     const removeButton = document.createElement('span');
     removeButton.textContent = '×';
     removeButton.className = 'remove-selected-tag';
-    removeButton.addEventListener('click', () => {
-        // Suppression du tag des actifs
+    removeButton.onclick = function() {
+        // Supprimer le tag des actifs
         activeTags[category].delete(tagText);
-        // Suppression du tag de l'affichage
+        // Supprimer le tag du DOM
         tag.remove();
-        // Mise à jour de l'affichage des recettes
+        // Mise à jour de l'affichage des recettes après la suppression du tag
         updateDisplayedRecipes();
-    });
+    };
 
     tag.appendChild(removeButton);
     selectedTagContainer.appendChild(tag);
 }
-// III UPDATE AFTER FILTER 
+
+// III UPDATE AFTER FILTER pour supprimer et reinitialiser
 function updateDisplayedRecipes() {
     const filteredRecipes = recipes.filter(recipe => {
         const ingredientMatch = [...activeTags.ingredients].every(ingredient => 
@@ -90,19 +91,6 @@ function updateDisplayedRecipes() {
     displayRecipes(filteredRecipes);
 }
 
-// Fonction pour ajouter un tag aux filtres actifs
-function addActiveTag(tag, category) {
-    activeTags[category].add(tag);
-    updateDisplayedRecipes();
-}
-
-function removeActiveTag(tag, category) {
-    // Vérifier si le tag existe dans la catégorie spécifiée et le supprimer
-    if (activeTags[category].has(tag)) {
-        activeTags[category].delete(tag);
-        updateDisplayedRecipes(); // Mettre à jour l'affichage des recettes après la suppression d'un tag
-    }
-}
 // Fonction pour créer un tag et attacher un gestionnaire d'événement de clic
 function createTag(text, category) {
     const tag = document.createElement('div');
