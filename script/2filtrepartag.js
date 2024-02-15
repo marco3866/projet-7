@@ -96,16 +96,18 @@ function createTag(text, category) {
     const tag = document.createElement('div');
     tag.className = 'tag';
     tag.textContent = text;
-    tag.setAttribute('data-category', category); // Ajouter une donnée-attribut pour identifier la catégorie du tag
+    tag.setAttribute('data-category', category);
 
-    // Attacher un gestionnaire d'événement de clic au tag
     tag.addEventListener('click', () => {
-        filterRecipesByTag(text, category);
+        // Ajouter le tag aux tags actifs
+        activeTags[category].add(text);
         displaySelectedTag(text, category);
+        updateDisplayedRecipes(); // Mise à jour de l'affichage des recettes avec les nouveaux tags actifs
     });
 
     return tag;
 }
+
 
 
  // Ajouter des tags aux dropdowns et attacher des gestionnaires d'événement de clic
