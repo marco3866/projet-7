@@ -54,7 +54,4 @@ function displayRecipes(filteredRecipes) {
 document.addEventListener("DOMContentLoaded", () => {
     // Supposons que 'recipes' est votre tableau de toutes les recettes
     displayRecipes(recipes);
-        // Mettre à jour les dropdowns en fonction des recettes filtrées
-        updateDropdowns(filteredRecipes);
-
 });
