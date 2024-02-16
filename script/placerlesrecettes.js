@@ -54,4 +54,5 @@ function displayRecipes(filteredRecipes) {
 document.addEventListener("DOMContentLoaded", () => {
     // Supposons que 'recipes' est votre tableau de toutes les recettes
     displayRecipes(recipes);
+    updateTagSets(filteredRecipes);
 });

@@ -77,6 +77,7 @@ function displaySelectedTag(tagText, category) {
 }
 
 // III UPDATE AFTER FILTER pour supprimer et reinitialiser
+// Fonction pour afficher les recettes filtrées et mettre à jour les tags
 function updateDisplayedRecipes() {
     // Filtrer les recettes selon les tags actifs
     const filteredRecipes = recipes.filter(recipe => {
@@ -113,12 +114,14 @@ function updateTagSets(filteredRecipes) {
     // Mettre à jour les tags dans les dropdowns
     updateDropdownTags();
 }
+
 // Met à jour les dropdowns avec les tags des ensembles mis à jour
 function updateDropdownTags() {
     updateTags(dropdownIngredients, ingredientsSet, 'ingredients');
     updateTags(dropdownAppliances, appliancesSet, 'appliance');
     updateTags(dropdownUtensils, utensilsSet, 'ustensils');
 }
+
 // Met à jour les tags d'un dropdown spécifique
 function updateTags(dropdown, tagSet, category) {
     // Effacer les tags actuels
@@ -129,27 +132,25 @@ function updateTags(dropdown, tagSet, category) {
         dropdown.appendChild(createTag(tag, category));
     });
 }
-// Fonction pour créer un tag et attacher un gestionnaire d'événement de clic
-function createTag(tagText, category) {
-    // Créer le tag seulement s'il est dans l'ensemble correspondant
-    if (ingredientsSet.has(tagText) || appliancesSet.has(tagText) || utensilsSet.has(tagText)) {
-        const tag = document.createElement('div');
-        tag.className = 'tag';
-        tag.textContent = tagText;
-        tag.dataset.category = category;
 
-        // Ajouter le gestionnaire de clic pour le tag
-        tag.addEventListener('click', () => {
-            // Ajouter le tag aux tags actifs et mettre à jour l'affichage
-            activeTags[category].add(tagText);
-            displaySelectedTag(tagText, category);
-            updateDisplayedRecipes();
-        });
+// Crée un tag et l'ajoute au DOM si le tag est pertinent
+function createTag(text, category) {
+    const tag = document.createElement('div');
+    tag.className = 'tag';
+    tag.textContent = text;
+    tag.setAttribute('data-category', category);
 
-        return tag;
-    }
+    // Ajouter un écouteur d'événements pour gérer le clic sur le tag.
+    tag.addEventListener('click', () => {
+        if (!activeTags[category].has(text)) {
+            activeTags[category].add(text); // Ajouter le tag aux tags actifs
+            displaySelectedTag(text, category); // Afficher le tag comme sélectionné
+            updateDisplayedRecipes(); // Mise à jour de l'affichage des recettes avec les nouveaux tags actifs
+        }
+    });
+
+    return tag; // Retourner le tag créé
 }
-
  // Ajouter des tags aux dropdowns et attacher des gestionnaires d'événement de clic
  ingredientsSet.forEach(ingredient => {
     dropdownIngredients.appendChild(createTag(ingredient, 'ingredients'));
