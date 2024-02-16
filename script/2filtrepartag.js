@@ -139,7 +139,8 @@ utensilsSet.forEach(utensil => {
 
     // Close dropdowns when clicking outside
     document.addEventListener('click', function(event) {
-        if (!event.target.matches('.filter-button')) {
+        // Si le clic n'est pas sur un bouton de filtre et pas à l'intérieur d'un menu déroulant, fermez les menus.
+        if (!event.target.matches('.filter-button') && !event.target.closest('.dropdown-menu')) {
             document.querySelectorAll('.dropdown-menu').forEach(menu => {
                 menu.classList.remove('show');
             });
