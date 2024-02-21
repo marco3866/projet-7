@@ -1,3 +1,8 @@
+// Dans un script chargé en premier
+var ingredientsSet = new Set();
+var appliancesSet = new Set();
+var utensilsSet = new Set();
+
 let activeTags = {
     ingredients: new Set(),
     appliance: new Set(),
@@ -43,7 +48,9 @@ function filterRecipesByTag(tag, category) {
     });
 
     // Afficher les recettes filtrées
+    console.log("Avant mise à jour des recettes");
     displayRecipes(filteredRecipes);
+    console.log("Après mise à jour des recettes");
 }
 
 
@@ -94,53 +101,58 @@ function updateDisplayedRecipes() {
     displayRecipes(filteredRecipes);
 
     // Mettre à jour les ensembles de tags en fonction des recettes filtrées
+    console.log("Avant mise à jour des tags:", document.querySelector('.search-box'));
     updateTagSets(filteredRecipes);
+    console.log("Après mise à jour des tags:", document.querySelector('.search-box'));
 }
 
 // Met à jour les ensembles de tags en fonction des recettes filtrées
 function updateTagSets(filteredRecipes) {
-    // Vider les ensembles de tags actuels
+    console.log("Mise à jour des ensembles de tags basée sur les recettes filtrées.");
     ingredientsSet.clear();
     appliancesSet.clear();
     utensilsSet.clear();
 
-    // Ajouter les tags des recettes filtrées aux ensembles
     filteredRecipes.forEach(recipe => {
         recipe.ingredients.forEach(item => ingredientsSet.add(item.ingredient));
         appliancesSet.add(recipe.appliance);
         recipe.ustensils.forEach(item => utensilsSet.add(item));
     });
 
-    // Mettre à jour les tags dans les dropdowns
+    console.log(`Nouveaux ensembles de tags: 
+                 Ingredients: ${[...ingredientsSet]},
+                 Appliances: ${[...appliancesSet]},
+                 Utensils: ${[...utensilsSet]}`);
+
+    // Mettre à jour les dropdowns avec les nouveaux ensembles de tags
     updateDropdownTags();
 }
 
-// Met à jour les dropdowns avec les tags des ensembles mis à jour
 function updateDropdownTags() {
+    console.log("Mise à jour des dropdowns avec les nouveaux ensembles de tags.");
     updateTags(dropdownIngredients, ingredientsSet, 'ingredients');
     updateTags(dropdownAppliances, appliancesSet, 'appliance');
     updateTags(dropdownUtensils, utensilsSet, 'ustensils');
 }
 
-// Met à jour les tags d'un dropdown spécifique
 function updateTags(dropdown, tagSet, category) {
-    // Effacer les tags actuels
+    console.log(`Mise à jour des tags pour ${category}.`);
     dropdown.innerHTML = '';
-
-    // Ajouter les tags pertinents
     tagSet.forEach(tag => {
-        dropdown.appendChild(createTag(tag, category));
+        if (activeTags[category] && !activeTags[category].has(tag)) {
+            dropdown.appendChild(createTag(tag, category));
+        }
     });
 }
 
-// Crée un tag et l'ajoute au DOM si le tag est pertinent
 function createTag(text, category) {
+    // Utilisez 'button' ou 'a' si vous voulez que chaque tag soit cliquable comme un bouton ou un lien
     const tag = document.createElement('div');
-    tag.className = 'tag';
+    tag.className = 'tag dropdown-option'; // Ajoutez ici les classes nécessaires pour le style
     tag.textContent = text;
     tag.setAttribute('data-category', category);
 
-    // Ajouter un écouteur d'événements pour gérer le clic sur le tag.
+    // Ajouter un écouteur d'événements pour gérer le clic sur le tag
     tag.addEventListener('click', () => {
         if (!activeTags[category].has(text)) {
             activeTags[category].add(text); // Ajouter le tag aux tags actifs
@@ -200,4 +212,5 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log('Recette cliquée:', card);
         });
     });
+    
 });
