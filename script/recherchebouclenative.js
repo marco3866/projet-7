@@ -1,4 +1,6 @@
-let lastSearchResult = [];
+let lastSearchTerm = ''; // Pour mémoriser le dernier terme de recherche
+let lastSearchResult = []; // Pour mémoriser les derniers résultats de recherche
+
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector('.search-container input');
     const searchIcon = document.querySelector('.search-container .fa-search');
@@ -6,33 +8,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fonction pour effectuer la recherche et mettre à jour l'affichage
     function performSearch(searchTerm) {
         console.log(searchTerm.length >= 3 ? `Recherche en cours pour : ${searchTerm}` : "Moins de 3 caractères, affichage de toutes les recettes.");
-        const filteredRecipes = searchTerm.length >= 3 ? recipes.filter(recipe =>
-            recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            recipe.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            recipe.ingredients.some(ingredient =>
-                ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase()))
-        ) : recipes;
+    
+        // Mémoriser le terme de recherche actuel pour une utilisation future
+        lastSearchTerm = searchTerm;
+    
+        const filteredRecipes = filterRecipesBySearchTermAndTags(searchTerm, activeTags);
+        
+        console.log("Nombre de recettes après filtrage :", filteredRecipes.length);
+    
         // Mettre à jour lastSearchResult avec les recettes filtrées
         lastSearchResult = filteredRecipes;
-        console.log("Nombre de recettes après filtrage :", filteredRecipes.length);
+    
         displayRecipes(filteredRecipes);
         updateFilterOptions(filteredRecipes);
-        updateActiveTagsAfterSearch(filteredRecipes);
-    }
-    function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
-        return recipes.filter(recipe => {
-            const matchesSearchTerm = searchTerm.length < 3 || // Si la recherche est vide ou a moins de 3 caractères
-                recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                recipe.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-            const ingredientMatch = [...activeTags.ingredients].every(tag => 
-                recipe.ingredients.some(ingredient => ingredient.ingredient === tag));
-            const applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
-            const utensilMatch = [...activeTags.ustensils].every(tag => recipe.ustensils.includes(tag));
-    
-            return matchesSearchTerm && ingredientMatch && applianceMatch && utensilMatch;
-        });
+        // Pas besoin d'appeler updateActiveTagsAfterSearch ici car les tags actifs ne changent pas lors d'une recherche
     }
     
     // Attachement des gestionnaires d'événements pour la recherche
@@ -108,25 +97,20 @@ function displaySelectedTag(tagText, category) {
 
 function handleFilterOptionClick(option, dropdownClass) {
     let category = dropdownClass.split('-')[1];
-
-    // Ajustement pour les catégories singulières
     if (category === 'appliances') category = 'appliance';
-    if (category === 'utensils') category = 'ustensils'; // Assurez-vous d'utiliser 'ustensils' si c'est le terme utilisé dans `activeTags`
+    if (category === 'utensils') category = 'ustensils';
 
-    // Vérification de la validité de la catégorie
     if (!activeTags.hasOwnProperty(category)) {
         console.error(`Catégorie non reconnue : ${category}`);
         return;
     }
 
-    // Ajout ou suppression du tag sélectionné et mise à jour de l'affichage
     if (!activeTags[category].has(option)) {
         activeTags[category].add(option);
         displaySelectedTag(option, category);
     } else {
         activeTags[category].delete(option);
-        const tagToRemove = document.querySelector(`.selected-tag[data-category="${category}"][textContent="${option}"]`);
-        if (tagToRemove) tagToRemove.remove();
+        removeDisplayedTag(option, category);
     }
 
     updateDisplayedRecipesWithActiveTags();
@@ -136,20 +120,27 @@ function removeDisplayedTag(tagText, category) {
     if (tagToRemove) tagToRemove.remove();
 }
 function updateDisplayedRecipesWithActiveTags() {
-    const filteredRecipes = lastSearchResult.filter(recipe => {
+    // Utiliser filterRecipesBySearchTermAndTags pour filtrer les recettes en fonction du dernier terme de recherche et des tags actifs
+    const filteredRecipes = filterRecipesBySearchTermAndTags(lastSearchTerm, activeTags);
+
+    displayRecipes(filteredRecipes);
+    updateFilterOptions(filteredRecipes);
+}
+function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
+    return recipes.filter(recipe => {
+        const matchesSearchTerm = searchTerm.length < 3 ||
+            recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            recipe.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase()));
+
         const ingredientMatch = [...activeTags.ingredients].every(tag => 
             recipe.ingredients.some(ingredient => ingredient.ingredient === tag));
         const applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
         const utensilMatch = [...activeTags.ustensils].every(tag => recipe.ustensils.includes(tag));
 
-        return ingredientMatch && applianceMatch && utensilMatch;
+        return matchesSearchTerm && ingredientMatch && applianceMatch && utensilMatch;
     });
-
-    displayRecipes(filteredRecipes);
-    updateFilterOptions(filteredRecipes);
-
 }
-
 function updateFilterOptions(recipes) {
     const filteredIngredients = new Set();
     const filteredAppliances = new Set();
@@ -184,7 +175,7 @@ function updateActiveTagsAfterSearch(filteredRecipes) {
 }
 function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
     return recipes.filter(recipe => {
-        const matchesSearchTerm = searchTerm.length < 3 || // Si la recherche est vide ou a moins de 3 caractères
+        const matchesSearchTerm = searchTerm.length < 3 ||
             recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             recipe.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase()));
