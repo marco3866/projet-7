@@ -89,22 +89,30 @@ function displaySelectedTag(tagText, category) {
     selectedTagContainer.appendChild(tag);
 }
 
-function handleFilterOptionClick(option, categoryClass) {
-    let category = categoryClass.split('-')[1];
-    if (category === 'appliances') category = 'appliance';
-    if (category === 'utensils') category = 'ustensil';
+function handleFilterOptionClick(option, dropdownClass) {
+    let category = dropdownClass.split('-')[1];
 
+    // Ajustement pour les catégories singulières
+    if (category === 'appliances') category = 'appliance';
+    if (category === 'utensils') category = 'ustensils'; // Assurez-vous d'utiliser 'ustensils' si c'est le terme utilisé dans `activeTags`
+
+    // Vérification de la validité de la catégorie
+    if (!activeTags.hasOwnProperty(category)) {
+        console.error(`Catégorie non reconnue : ${category}`);
+        return;
+    }
+
+    // Ajout ou suppression du tag sélectionné et mise à jour de l'affichage
     if (!activeTags[category].has(option)) {
         activeTags[category].add(option);
         displaySelectedTag(option, category);
     } else {
         activeTags[category].delete(option);
-        // Supprimer l'affichage du tag
-        removeDisplayedTag(option, category);
+        const tagToRemove = document.querySelector(`.selected-tag[data-category="${category}"][textContent="${option}"]`);
+        if (tagToRemove) tagToRemove.remove();
     }
 
     updateDisplayedRecipesWithActiveTags();
-    updateActiveTagsAfterSearch(getCurrentFilteredRecipes()); // Mettre à jour les tags actifs
 }
 function removeDisplayedTag(tagText, category) {
     const tagToRemove = document.querySelector(`.selected-tag[data-category="${category}"]`).textContent === tagText;
