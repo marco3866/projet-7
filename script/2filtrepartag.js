@@ -1,4 +1,5 @@
 // Dans un script chargé en premier
+
 var ingredientsSet = new Set();
 var appliancesSet = new Set();
 var utensilsSet = new Set();
@@ -31,28 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
             utensilsSet.add(utensil);
         });
     });
-
-    // Fonction pour filtrer les recettes par tag
-
-function filterRecipesByTag(tag, category) {
-    // Filtrer les recettes en fonction de la catégorie et du tag sélectionné
-    const filteredRecipes = recipes.filter(recipe => {
-        if (category === 'ingredients') {
-            return recipe.ingredients.some(ingredient => ingredient.ingredient === tag);
-        } else if (category === 'appliance') {
-            return recipe.appliance === tag;
-        } else if (category === 'ustensils') {
-            return recipe.ustensils.includes(tag);
-        }
-        return false;
-    });
-
-    // Afficher les recettes filtrées
-    console.log("Avant mise à jour des recettes");
-    displayRecipes(filteredRecipes);
-    console.log("Après mise à jour des recettes");
-}
-
 
 // Fonction pour afficher le tag sélectionné et gérer la suppression
 function displaySelectedTag(tagText, category) {
@@ -137,9 +116,17 @@ function updateDropdownTags() {
 
 function updateTags(dropdown, tagSet, category) {
     console.log(`Mise à jour des tags pour ${category}.`);
+
+    // Préserver la barre de recherche si elle existe
+    const searchBox = dropdown.querySelector('.search-box');
     dropdown.innerHTML = '';
+    if (searchBox) {
+        dropdown.appendChild(searchBox);
+    }
+
+    // Ajouter les tags mis à jour
     tagSet.forEach(tag => {
-        if (activeTags[category] && !activeTags[category].has(tag)) {
+        if (!activeTags[category].has(tag)) {
             dropdown.appendChild(createTag(tag, category));
         }
     });

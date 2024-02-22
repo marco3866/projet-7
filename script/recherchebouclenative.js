@@ -1,3 +1,4 @@
+let lastSearchResult = [];
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector('.search-container input');
     const searchIcon = document.querySelector('.search-container .fa-search');
@@ -11,13 +12,29 @@ document.addEventListener("DOMContentLoaded", () => {
             recipe.ingredients.some(ingredient =>
                 ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase()))
         ) : recipes;
-    
+        // Mettre à jour lastSearchResult avec les recettes filtrées
+        lastSearchResult = filteredRecipes;
         console.log("Nombre de recettes après filtrage :", filteredRecipes.length);
         displayRecipes(filteredRecipes);
         updateFilterOptions(filteredRecipes);
         updateActiveTagsAfterSearch(filteredRecipes);
     }
-
+    function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
+        return recipes.filter(recipe => {
+            const matchesSearchTerm = searchTerm.length < 3 || // Si la recherche est vide ou a moins de 3 caractères
+                recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                recipe.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+            const ingredientMatch = [...activeTags.ingredients].every(tag => 
+                recipe.ingredients.some(ingredient => ingredient.ingredient === tag));
+            const applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
+            const utensilMatch = [...activeTags.ustensils].every(tag => recipe.ustensils.includes(tag));
+    
+            return matchesSearchTerm && ingredientMatch && applianceMatch && utensilMatch;
+        });
+    }
+    
     // Attachement des gestionnaires d'événements pour la recherche
     searchInput.addEventListener('keyup', (event) => {
         if (event.key === 'Enter') {
@@ -119,7 +136,7 @@ function removeDisplayedTag(tagText, category) {
     if (tagToRemove) tagToRemove.remove();
 }
 function updateDisplayedRecipesWithActiveTags() {
-    const filteredRecipes = recipes.filter(recipe => {
+    const filteredRecipes = lastSearchResult.filter(recipe => {
         const ingredientMatch = [...activeTags.ingredients].every(tag => 
             recipe.ingredients.some(ingredient => ingredient.ingredient === tag));
         const applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
@@ -165,7 +182,21 @@ function updateActiveTagsAfterSearch(filteredRecipes) {
     }
     updateSelectedTagsDisplay();
 }
+function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
+    return recipes.filter(recipe => {
+        const matchesSearchTerm = searchTerm.length < 3 || // Si la recherche est vide ou a moins de 3 caractères
+            recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            recipe.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase()));
 
+        const ingredientMatch = [...activeTags.ingredients].every(tag => 
+            recipe.ingredients.some(ingredient => ingredient.ingredient === tag));
+        const applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
+        const utensilMatch = [...activeTags.ustensils].every(tag => recipe.ustensils.includes(tag));
+
+        return matchesSearchTerm && ingredientMatch && applianceMatch && utensilMatch;
+    });
+}
 function updateSelectedTagsDisplay() {
     const selectedTagContainer = document.querySelector('.selected-tags-container');
     selectedTagContainer.innerHTML = '';
