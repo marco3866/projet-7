@@ -67,10 +67,15 @@ function displaySelectedTag(tagText, category) {
 function updateDisplayedRecipes() {
     // Filtrer les recettes selon les tags actifs
     const filteredRecipes = recipes.filter(recipe => {
-        const ingredientMatch = [...activeTags.ingredients].every(tag => 
+        // Vérifier si chaque tag d'ingrédient est présent dans la recette
+        const ingredientMatch = Array.from(activeTags.ingredients).every(tag => 
             recipe.ingredients.some(ingredient => ingredient.ingredient === tag));
-        const applianceMatch = !activeTags.appliance.size || activeTags.appliance.has(recipe.appliance);
-        const utensilMatch = [...activeTags.ustensils].every(tag => 
+
+        // Vérifier si l'appareil correspond ou si aucun tag n'est actif
+        const applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
+
+        // Vérifier si chaque tag d'ustensile est présent dans la recette
+        const utensilMatch = Array.from(activeTags.ustensils).every(tag => 
             recipe.ustensils.includes(tag));
 
         return ingredientMatch && applianceMatch && utensilMatch;

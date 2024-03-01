@@ -1,58 +1,48 @@
+// miniSearchHandler.js
+
 document.addEventListener("DOMContentLoaded", () => {
     const ingredientSearchInput = document.querySelector('.dropdown-ingredients .search-input');
-    const ingredientSearchIcon = document.querySelector('.dropdown-ingredients .fa-search');
-    const dropdownIngredients = document.querySelector('.dropdown-ingredients');
+    const applianceSearchInput = document.querySelector('.dropdown-appliances .search-input');
+    const utensilSearchInput = document.querySelector('.dropdown-utensils .search-input');
 
-    // Créer un ensemble de tous les ingrédients uniques
-    const ingredientsSet = new Set(recipes.flatMap(recipe => recipe.ingredients.map(ing => ing.ingredient)));
-
-    // Fonction pour actualiser l'affichage des tags d'ingrédients
-    function updateIngredientTags(filteredIngredients) {
-        const tagsContainer = dropdownIngredients.querySelector('.tags-container');
-        tagsContainer.innerHTML = ''; // Effacer les tags existants
-
-        filteredIngredients.forEach(ingredient => {
-            const tagElement = document.createElement('div');
-            tagElement.className = 'tag';
-            tagElement.textContent = ingredient;
-            tagElement.addEventListener('click', () => {
-                // Logique à exécuter lorsqu'un tag est cliqué
-                console.log(`Tag sélectionné: ${ingredient}`);
-            });
-            tagsContainer.appendChild(tagElement);
-        });
-    }
-
-    // Fonction pour effectuer la recherche dans les ingrédients
-    function performIngredientSearch(searchTerm) {
-        if (searchTerm.length >= 3) {
-            console.log(`Recherche en cours pour les ingrédients: ${searchTerm}`);
-            const filteredIngredients = Array.from(ingredientsSet)
-                .filter(ingredient => ingredient.toLowerCase().includes(searchTerm.toLowerCase()));
-
-            updateIngredientTags(filteredIngredients);
-        } else {
-            // Afficher tous les ingrédients si la recherche est effacée
-            updateIngredientTags(Array.from(ingredientsSet));
-        }
-    }
-
-    // Gestionnaire d'événements pour le clic sur l'icône de recherche
-    ingredientSearchIcon.addEventListener('click', () => {
-        console.log('Clic sur l\'icône de recherche pour ingrédients détecté.');
-        performIngredientSearch(ingredientSearchInput.value);
-    });
-
-    // Gestionnaire d'événements pour la saisie au clavier (keyup)
-    ingredientSearchInput.addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') {
-            console.log('Touche "Entrée" détectée pour ingrédients.');
-            performIngredientSearch(ingredientSearchInput.value);
-        }
-    });
-
-    // Gestionnaire d'événements pour la recherche intuitive (input)
-    ingredientSearchInput.addEventListener('input', (event) => {
-        performIngredientSearch(event.target.value);
-    });
+    ingredientSearchInput.addEventListener('input', () => filterDropdownOptions('dropdown-ingredients', ingredientSearchInput.value));
+    applianceSearchInput.addEventListener('input', () => filterDropdownOptions('dropdown-appliances', applianceSearchInput.value));
+    utensilSearchInput.addEventListener('input', () => filterDropdownOptions('dropdown-utensils', utensilSearchInput.value));
 });
+// Fait apparaite les bons tags par rapport au recette 
+function updateDropdownOptions(dropdownClass, options) {
+    const dropdown = document.querySelector('.' + dropdownClass);
+    if (!dropdown) {
+        console.error(`Élément non trouvé pour le sélecteur : .${dropdownClass}`);
+        return;
+    }
+
+    let category = dropdownClass.split('-')[1];
+    if (category === 'appliances') category = 'appliance';
+    if (category === 'utensils') category = 'ustensils'; // Assurez-vous que c'est cohérent avec votre choix dans `activeTags`
+
+    // Vérifiez que la catégorie est bien présente dans activeTags
+    if (!(category in activeTags)) {
+        console.error(`Catégorie non reconnue ou non initialisée : ${category}`);
+        return;
+    }
+
+    const searchBox = dropdown.querySelector('.search-box');
+    dropdown.innerHTML = '';
+    if (searchBox) {
+        dropdown.appendChild(searchBox);
+    }
+
+    // Filtre les options pour exclure les tags actifs
+    options = Array.from(options).filter(option => !activeTags[category].has(option));
+
+    options.forEach(option => {
+        const optionElement = document.createElement('div');
+        optionElement.classList.add('tag');
+        optionElement.textContent = option;
+        optionElement.addEventListener('click', function() {
+            handleFilterOptionClick(option, dropdownClass);
+        });
+        dropdown.appendChild(optionElement);
+    });
+}

@@ -4,7 +4,14 @@ let lastSearchResult = []; // Pour mémoriser les derniers résultats de recherc
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector('.search-container input');
     const searchIcon = document.querySelector('.search-container .fa-search');
-
+    // Sélecteur pour la mini-barre de recherche des ingrédients
+    const searchInputIngredients = document.querySelector('.dropdown-ingredients .search-input');
+    const searchInputAppliances = document.querySelector('.dropdown-appliances .search-input');
+    const searchInputUtensils = document.querySelector('.dropdown-utensils .search-input');
+    // Attacher des gestionnaires d'événements pour la recherche dans les ingrédients
+    attachSearchHandler(searchInputIngredients, 'ingredients');
+    attachSearchHandler(searchInputAppliances, 'appliance');
+    attachSearchHandler(searchInputUtensils, 'ustensils');
     // Fonction pour effectuer la recherche et mettre à jour l'affichage
     function performSearch(searchTerm) {
         console.log(searchTerm.length >= 3 ? `Recherche en cours pour : ${searchTerm}` : "Moins de 3 caractères, affichage de toutes les recettes.");
@@ -14,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
         // Filtrer les recettes en fonction du terme de recherche et des tags actifs
         const filteredRecipes = filterRecipesBySearchTermAndTags(searchTerm, activeTags);
-        
+    
         console.log("Nombre de recettes après filtrage :", filteredRecipes.length);
     
         // Mettre à jour lastSearchResult avec les recettes filtrées
@@ -24,10 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
         displayRecipes(filteredRecipes);
         updateFilterOptions(filteredRecipes);
     
-        // Mettre à jour l'affichage des tags sélectionnés
-        // Cette étape est nécessaire pour refléter les changements dans les tags
-        // lors de la recherche, sans perdre les sélections de tags précédentes
-        updateSelectedTagsDisplay();
     }
     // Attachement des gestionnaires d'événements pour la recherche
     searchInput.addEventListener('keyup', (event) => {
@@ -45,6 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+
+// Fait apparaite les bons tags par rapport au recette 
 function updateDropdownOptions(dropdownClass, options) {
     const dropdown = document.querySelector('.' + dropdownClass);
     if (!dropdown) {
@@ -52,28 +57,46 @@ function updateDropdownOptions(dropdownClass, options) {
         return;
     }
 
-    // Préserver la barre de recherche si nécessaire
+    let category = dropdownClass.split('-')[1];
+    if (category === 'appliances') category = 'appliance';
+    if (category === 'utensils') category = 'ustensils';
+
+    if (!(category in activeTags)) {
+        console.error(`Catégorie non reconnue ou non initialisée : ${category}`);
+        return;
+    }
+
+    // Mémoriser la valeur actuelle et la position du curseur dans la barre de recherche
     const searchBox = dropdown.querySelector('.search-box');
+    const searchInput = searchBox ? searchBox.querySelector('.search-input') : null;
+    const cursorPosition = searchInput ? searchInput.selectionStart : 0;
+    const searchValue = searchInput ? searchInput.value : "";
+
     dropdown.innerHTML = '';
     if (searchBox) {
         dropdown.appendChild(searchBox);
     }
 
+    options = Array.from(options).filter(option => !activeTags[category].has(option));
+
     options.forEach(option => {
         const optionElement = document.createElement('div');
         optionElement.classList.add('tag');
         optionElement.textContent = option;
-
-        optionElement.addEventListener('click', () => {
-            console.log(`Option cliquée: ${option}`);
-            // Ajoutez ici la logique de traitement du clic sur l'option
-            // Par exemple, mettre à jour les recettes affichées en fonction de l'option sélectionnée
+        optionElement.addEventListener('click', function() {
             handleFilterOptionClick(option, dropdownClass);
         });
-
         dropdown.appendChild(optionElement);
     });
+
+    // Restaurer la valeur et le focus de la barre de recherche
+    if (searchInput) {
+        searchInput.value = searchValue;
+        searchInput.focus();
+        searchInput.setSelectionRange(cursorPosition, cursorPosition);
+    }
 }
+// AFFICHER LES TAGS APRES RECHERCHE EN HAUT
 function displaySelectedTag(tagText, category) {
     const selectedTagContainer = document.querySelector('.selected-tags-container');
     if (!selectedTagContainer) {
@@ -120,6 +143,7 @@ function handleFilterOptionClick(option, dropdownClass) {
 
     updateDisplayedRecipesWithActiveTags();
 }
+    // SUPPRIME LES TAGS DEJA PRESENt en jaune
 function removeDisplayedTag(tagText, category) {
     const tagToRemove = document.querySelector(`.selected-tag[data-category="${category}"]`).textContent === tagText;
     if (tagToRemove) tagToRemove.remove();
@@ -131,6 +155,7 @@ function updateDisplayedRecipesWithActiveTags() {
     displayRecipes(filteredRecipes);
     updateFilterOptions(filteredRecipes);
 }
+// Cette fonction filtre les tags et les recherche en meme temps
 function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
     return recipes.filter(recipe => {
         const matchesSearchTerm = searchTerm.length < 3 ||
@@ -138,14 +163,22 @@ function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
             recipe.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase()));
 
-        const ingredientMatch = [...activeTags.ingredients].every(tag => 
+        // Vérifier si chaque tag d'ingrédient est présent dans la recette
+        const ingredientMatch = Array.from(activeTags.ingredients).every(tag => 
             recipe.ingredients.some(ingredient => ingredient.ingredient === tag));
+
+        // Vérifier si l'appareil correspond ou si aucun tag n'est actif
         const applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
-        const utensilMatch = [...activeTags.ustensils].every(tag => recipe.ustensils.includes(tag));
+
+        // Vérifier si chaque tag d'ustensile est présent dans la recette
+        const utensilMatch = Array.from(activeTags.ustensils).every(tag => 
+            recipe.ustensils.includes(tag));
 
         return matchesSearchTerm && ingredientMatch && applianceMatch && utensilMatch;
     });
 }
+
+// Cette fonction met à jour l'affichage des tags sélectionnés sans supprimer les tags non présents dans les résultats filtrés
 function updateFilterOptions(recipes) {
     const filteredIngredients = new Set();
     const filteredAppliances = new Set();
@@ -161,38 +194,7 @@ function updateFilterOptions(recipes) {
     updateDropdownOptions('dropdown-appliances', filteredAppliances);
     updateDropdownOptions('dropdown-utensils', filteredUtensils);
 }
-function updateActiveTagsAfterSearch(filteredRecipes) {
-    for (const category in activeTags) {
-        activeTags[category].forEach(tag => {
-            const isTagPresent = filteredRecipes.some(recipe => {
-                if (category === 'ingredients') return recipe.ingredients.some(ingredient => ingredient.ingredient === tag);
-                if (category === 'appliance') return recipe.appliance === tag;
-                if (category === 'ustensils') return recipe.ustensils.includes(tag);
-                return false;
-            });
 
-            if (!isTagPresent) {
-                activeTags[category].delete(tag);
-            }
-        });
-    }
-    updateSelectedTagsDisplay();
-}
-function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
-    return recipes.filter(recipe => {
-        const matchesSearchTerm = searchTerm.length < 3 ||
-            recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            recipe.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase()));
-
-        const ingredientMatch = [...activeTags.ingredients].every(tag => 
-            recipe.ingredients.some(ingredient => ingredient.ingredient === tag));
-        const applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
-        const utensilMatch = [...activeTags.ustensils].every(tag => recipe.ustensils.includes(tag));
-
-        return matchesSearchTerm && ingredientMatch && applianceMatch && utensilMatch;
-    });
-}
 function updateSelectedTagsDisplay() {
     const selectedTagContainer = document.querySelector('.selected-tags-container');
     selectedTagContainer.innerHTML = '';
@@ -203,34 +205,51 @@ function updateSelectedTagsDisplay() {
         });
     }
 }
-// Utiliser filterRecipesBySearchTermAndTags pour filtrer les recettes en fonction du dernier terme de recherche et des tags actifs
-document.addEventListener("DOMContentLoaded", () => {
-    // Gestionnaire d'événements pour le nouvel input
-    const newSearchInput = document.querySelector('.search-input');
 
-    newSearchInput.addEventListener('keyup', (event) => {
+function attachSearchHandler(searchInput, category) {
+    searchInput.addEventListener('keyup', (event) => {
         if (event.key === 'Enter') {
-            performNewSearch(newSearchInput.value);
+            performCategorySearch(searchInput.value, category);
         }
     });
 
-    newSearchInput.addEventListener('input', () => {
-        performNewSearch(newSearchInput.value);
+    searchInput.addEventListener('input', () => {
+        performCategorySearch(searchInput.value, category);
     });
-});
+}
 
-function performNewSearch(searchTerm) {
-    console.log(searchTerm.length >= 3 ? `Recherche en cours pour : ${searchTerm}` : "Moins de 3 caractères, affichage de toutes les recettes.");
+// POUR RECHERCHER DANS CATEGORY
+function performCategorySearch(searchTerm, category) {
+    let options = new Set();
 
-    // Mémoriser le terme de recherche actuel pour une utilisation future
-    lastSearchTerm = searchTerm;
+    console.log(`Recherche dans la catégorie : ${category}`);
 
-    const filteredRecipes = filterRecipesBySearchTermAndTags(searchTerm, activeTags);
-    
-    console.log("Nombre de recettes après filtrage :", filteredRecipes.length);
+    if (category === 'ingredients') {
+        recipes.forEach(recipe => {
+            recipe.ingredients.forEach(ingredient => {
+                if (ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    options.add(ingredient.ingredient);
+                }
+            });
+        });
+    } else if (category === 'appliances') {
+        console.log("Recherche dans les appareils");
+        appliancesSet.forEach(appliance => {
+            if (appliance.toLowerCase().includes(searchTerm.toLowerCase())) {
+                options.add(appliance);
+            }
+        });
+    } else if (category === 'utensils') {
+        console.log("Recherche dans les ustensiles");
+        utensilsSet.forEach(utensil => {
+            if (utensil.toLowerCase().includes(searchTerm.toLowerCase())) {
+                options.add(utensil);
+            }
+        });
+    } else {
+        console.error(`Catégorie inconnue : ${category}`);
+    }
 
-    lastSearchResult = filteredRecipes;
-
-    displayRecipes(filteredRecipes);
-    updateFilterOptions(filteredRecipes);
+    // Assurez-vous que les sélecteurs de classe sont corrects
+    updateDropdownOptions(`dropdown-${category}`, options);
 }
