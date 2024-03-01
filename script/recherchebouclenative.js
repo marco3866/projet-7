@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Mémoriser le terme de recherche actuel pour une utilisation future
         lastSearchTerm = searchTerm;
     
+        // Filtrer les recettes en fonction du terme de recherche et des tags actifs
         const filteredRecipes = filterRecipesBySearchTermAndTags(searchTerm, activeTags);
         
         console.log("Nombre de recettes après filtrage :", filteredRecipes.length);
@@ -19,11 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
         // Mettre à jour lastSearchResult avec les recettes filtrées
         lastSearchResult = filteredRecipes;
     
+        // Afficher les recettes filtrées et mettre à jour les options de filtre
         displayRecipes(filteredRecipes);
         updateFilterOptions(filteredRecipes);
-        // Pas besoin d'appeler updateActiveTagsAfterSearch ici car les tags actifs ne changent pas lors d'une recherche
-    }
     
+        // Mettre à jour l'affichage des tags sélectionnés
+        // Cette étape est nécessaire pour refléter les changements dans les tags
+        // lors de la recherche, sans perdre les sélections de tags précédentes
+        updateSelectedTagsDisplay();
+    }
     // Attachement des gestionnaires d'événements pour la recherche
     searchInput.addEventListener('keyup', (event) => {
         if (event.key === 'Enter') {
@@ -197,4 +202,35 @@ function updateSelectedTagsDisplay() {
             displaySelectedTag(tag, category);
         });
     }
+}
+// Utiliser filterRecipesBySearchTermAndTags pour filtrer les recettes en fonction du dernier terme de recherche et des tags actifs
+document.addEventListener("DOMContentLoaded", () => {
+    // Gestionnaire d'événements pour le nouvel input
+    const newSearchInput = document.querySelector('.search-input');
+
+    newSearchInput.addEventListener('keyup', (event) => {
+        if (event.key === 'Enter') {
+            performNewSearch(newSearchInput.value);
+        }
+    });
+
+    newSearchInput.addEventListener('input', () => {
+        performNewSearch(newSearchInput.value);
+    });
+});
+
+function performNewSearch(searchTerm) {
+    console.log(searchTerm.length >= 3 ? `Recherche en cours pour : ${searchTerm}` : "Moins de 3 caractères, affichage de toutes les recettes.");
+
+    // Mémoriser le terme de recherche actuel pour une utilisation future
+    lastSearchTerm = searchTerm;
+
+    const filteredRecipes = filterRecipesBySearchTermAndTags(searchTerm, activeTags);
+    
+    console.log("Nombre de recettes après filtrage :", filteredRecipes.length);
+
+    lastSearchResult = filteredRecipes;
+
+    displayRecipes(filteredRecipes);
+    updateFilterOptions(filteredRecipes);
 }
