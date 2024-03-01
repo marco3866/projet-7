@@ -155,27 +155,51 @@ function updateDisplayedRecipesWithActiveTags() {
     displayRecipes(filteredRecipes);
     updateFilterOptions(filteredRecipes);
 }
-// Cette fonction filtre les tags et les recherche en meme temps
 function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
-    return recipes.filter(recipe => {
-        const matchesSearchTerm = searchTerm.length < 3 ||
+    let filteredRecipes = [];
+
+    for (let recipe of recipes) {
+        let matchesSearchTerm = searchTerm.length < 3 ||
             recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            recipe.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase()));
+            recipe.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-        // Vérifier si chaque tag d'ingrédient est présent dans la recette
-        const ingredientMatch = Array.from(activeTags.ingredients).every(tag => 
-            recipe.ingredients.some(ingredient => ingredient.ingredient === tag));
+        // Vérifiez les ingrédients pour le terme de recherche
+        if (!matchesSearchTerm) {
+            for (let ingredient of recipe.ingredients) {
+                if (ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    matchesSearchTerm = true;
+                    break;
+                }
+            }
+        }
 
-        // Vérifier si l'appareil correspond ou si aucun tag n'est actif
-        const applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
+        // Vérifiez les tags d'ingrédients
+        let ingredientMatch = true;
+        for (let tag of activeTags.ingredients) {
+            if (!recipe.ingredients.some(ingredient => ingredient.ingredient === tag)) {
+                ingredientMatch = false;
+                break;
+            }
+        }
 
-        // Vérifier si chaque tag d'ustensile est présent dans la recette
-        const utensilMatch = Array.from(activeTags.ustensils).every(tag => 
-            recipe.ustensils.includes(tag));
+        // Vérifiez le tag d'appareil
+        let applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
 
-        return matchesSearchTerm && ingredientMatch && applianceMatch && utensilMatch;
-    });
+        // Vérifiez les tags d'ustensiles
+        let utensilMatch = true;
+        for (let tag of activeTags.ustensils) {
+            if (!recipe.ustensils.includes(tag)) {
+                utensilMatch = false;
+                break;
+            }
+        }
+
+        if (matchesSearchTerm && ingredientMatch && applianceMatch && utensilMatch) {
+            filteredRecipes.push(recipe);
+        }
+    }
+
+    return filteredRecipes;
 }
 
 // Cette fonction met à jour l'affichage des tags sélectionnés sans supprimer les tags non présents dans les résultats filtrés
