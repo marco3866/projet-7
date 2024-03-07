@@ -257,6 +257,8 @@ header {
     width: 100%; /* Set width to match the container or button */
     top: 100%; /* Position directly below the filter button */
     left: 0; /* Align to the left edge of the filter button */
+    max-height: 300px; /* Hauteur maximale avant le défilement */
+    overflow-y: auto; /* Permettre le défilement vertical */
 }
 
 .show {
@@ -278,7 +280,7 @@ header {
 
 .search-icon {
     position: absolute;
-    left: 100px;
+    left: 80px;
     top: 50%;
     transform: translateY(-50%);
     color: #ccc;
@@ -290,7 +292,7 @@ header {
 }
 
 .tag {
-    padding: 5px 10px;
+    padding: 15px 20px;
     cursor: pointer;
     font-size: 0.8em;
     color: #333;

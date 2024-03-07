@@ -162,7 +162,6 @@ function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
         let matchesSearchTerm = searchTerm.length < 3 ||
             recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             recipe.description.toLowerCase().includes(searchTerm.toLowerCase());
-
         // Vérifiez les ingrédients pour le terme de recherche
         if (!matchesSearchTerm) {
             for (let ingredient of recipe.ingredients) {
