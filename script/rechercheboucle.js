@@ -155,51 +155,58 @@ function updateDisplayedRecipesWithActiveTags() {
     displayRecipes(filteredRecipes);
     updateFilterOptions(filteredRecipes);
 }
+
+// ALGORYTHME DE RECHERCHE PRICIPAL
 function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
     let filteredRecipes = [];
-
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+  
     for (let recipe of recipes) {
-        let matchesSearchTerm = searchTerm.length < 3 ||
-            recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            recipe.description.toLowerCase().includes(searchTerm.toLowerCase());
-        // Vérifiez les ingrédients pour le terme de recherche
-        if (!matchesSearchTerm) {
-            for (let ingredient of recipe.ingredients) {
-                if (ingredient.ingredient.toLowerCase().includes(searchTerm.toLowerCase())) {
-                    matchesSearchTerm = true;
-                    break;
-                }
-            }
+      let matchesSearchTerm = searchTerm.length < 3 ||
+        recipe.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+        recipe.description.toLowerCase().includes(lowerCaseSearchTerm);
+  
+      // Vérifiez les ingrédients pour le terme de recherche
+      if (!matchesSearchTerm) {
+        matchesSearchTerm = recipe.ingredients.some(ingredient =>
+          ingredient.ingredient.toLowerCase().includes(lowerCaseSearchTerm)
+        );
+      }
+  
+      // Vérifiez les tags d'ingrédients
+      let ingredientMatch = true;
+      for (let tag of activeTags.ingredients) {
+        if (!recipe.ingredients.some(ingredient => ingredient.ingredient === tag)) {
+          ingredientMatch = false;
+          break;
         }
-
-        // Vérifiez les tags d'ingrédients
-        let ingredientMatch = true;
-        for (let tag of activeTags.ingredients) {
-            if (!recipe.ingredients.some(ingredient => ingredient.ingredient === tag)) {
-                ingredientMatch = false;
-                break;
-            }
+      }
+  
+      // Vérifiez les tags d'appareil
+      let applianceMatch = true;
+      for (let tag of activeTags.appliance) {
+        if (recipe.appliance !== tag) {
+          applianceMatch = false;
+          break;
         }
-
-        // Vérifiez le tag d'appareil
-        let applianceMatch = activeTags.appliance.size === 0 || activeTags.appliance.has(recipe.appliance);
-
-        // Vérifiez les tags d'ustensiles
-        let utensilMatch = true;
-        for (let tag of activeTags.ustensils) {
-            if (!recipe.ustensils.includes(tag)) {
-                utensilMatch = false;
-                break;
-            }
+      }
+  
+      // Vérifiez les tags d'ustensiles
+      let utensilMatch = true;
+      for (let tag of activeTags.ustensils) {
+        if (!recipe.ustensils.includes(tag)) {
+          utensilMatch = false;
+          break;
         }
-
-        if (matchesSearchTerm && ingredientMatch && applianceMatch && utensilMatch) {
-            filteredRecipes.push(recipe);
-        }
+      }
+  
+      if (matchesSearchTerm && ingredientMatch && applianceMatch && utensilMatch) {
+        filteredRecipes.push(recipe);
+      }
     }
-
+  
     return filteredRecipes;
-}
+  }
 
 // Cette fonction met à jour l'affichage des tags sélectionnés sans supprimer les tags non présents dans les résultats filtrés
 function updateFilterOptions(recipes) {
