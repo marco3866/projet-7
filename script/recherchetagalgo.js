@@ -20,7 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
         lastSearchTerm = searchTerm;
     
         // Filtrer les recettes en fonction du terme de recherche et des tags actifs
+        console.time("FiltrageDesRecettes");
         const filteredRecipes = filterRecipesBySearchTermAndTags(searchTerm, activeTags);
+        console.timeEnd("FiltrageDesRecettes");
     
         console.log("Nombre de recettes après filtrage :", filteredRecipes.length);
     
