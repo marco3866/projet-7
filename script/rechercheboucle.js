@@ -176,7 +176,7 @@ function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
         );
       }
   
-      // Vérifiez les tags d'ingrédients
+      // Vérifiez les tags d'ingrédients AU MOINS UN des ingrédients de la recette correspond EXACTEMENT au tag
       let ingredientMatch = true;
       for (let tag of activeTags.ingredients) {
         if (!recipe.ingredients.some(ingredient => ingredient.ingredient === tag)) {
@@ -185,7 +185,7 @@ function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
         }
       }
   
-      // Vérifiez les tags d'appareil
+      // Vérifiez les tags d'appareil AU MOINS UN des appareils de la recette correspond EXACTEMENT au tag
       let applianceMatch = true;
       for (let tag of activeTags.appliance) {
         if (recipe.appliance !== tag) {
@@ -194,7 +194,7 @@ function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
         }
       }
   
-      // Vérifiez les tags d'ustensiles
+      // Vérifiez les tags d'ustensiles si le tag est INCLUS dans le tableau des ustensiles de la recette. Si le tag n'est pas inclus, utensilMatch est défini à false.
       let utensilMatch = true;
       for (let tag of activeTags.ustensils) {
         if (!recipe.ustensils.includes(tag)) {
