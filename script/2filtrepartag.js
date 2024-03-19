@@ -111,14 +111,14 @@ function updateTagSets(filteredRecipes) {
     // Mettre à jour les dropdowns avec les nouveaux ensembles de tags
     updateDropdownTags();
 }
-
+// MET A JOUR MENU DEROULANT AVEC NOUVEAU TAG
 function updateDropdownTags() {
     console.log("Mise à jour des dropdowns avec les nouveaux ensembles de tags.");
     updateTags(dropdownIngredients, ingredientsSet, 'ingredients');
     updateTags(dropdownAppliances, appliancesSet, 'appliance');
     updateTags(dropdownUtensils, utensilsSet, 'ustensils');
 }
-
+// Mise a jour SPECIFIQUE PAR MENU 
 function updateTags(dropdown, tagSet, category) {
     console.log(`Mise à jour des tags pour ${category}.`);
 
@@ -136,7 +136,7 @@ function updateTags(dropdown, tagSet, category) {
         }
     });
 }
-
+// Element de Tag clickable
 function createTag(text, category) {
     // Utilisez 'button' ou 'a' si vous voulez que chaque tag soit cliquable comme un bouton ou un lien
     const tag = document.createElement('div');

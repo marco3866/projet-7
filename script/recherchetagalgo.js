@@ -124,7 +124,7 @@ function displaySelectedTag(tagText, category) {
     tag.appendChild(removeButton);
     selectedTagContainer.appendChild(tag);
 }
-
+// MET A JOUR OPION FILTRE DANS MENU DEROULANT
 function handleFilterOptionClick(option, dropdownClass) {
     let category = dropdownClass.split('-')[1];
     if (category === 'appliances') category = 'appliance';
@@ -150,6 +150,8 @@ function removeDisplayedTag(tagText, category) {
     const tagToRemove = document.querySelector(`.selected-tag[data-category="${category}"]`).textContent === tagText;
     if (tagToRemove) tagToRemove.remove();
 }
+
+  // FILTRE ET MET A JOUR RECETTE AFFICHE
 function updateDisplayedRecipesWithActiveTags() {
     // Utiliser filterRecipesBySearchTermAndTags pour filtrer les recettes en fonction du dernier terme de recherche et des tags actifs
     const filteredRecipes = filterRecipesBySearchTermAndTags(lastSearchTerm, activeTags);
@@ -157,7 +159,7 @@ function updateDisplayedRecipesWithActiveTags() {
     displayRecipes(filteredRecipes);
     updateFilterOptions(filteredRecipes);
 }
-// Cette fonction filtre les tags et les recherche en meme temps
+// MAIN FONCTION ALGORYTHME Cette fonction filtre les tags et les recherche en meme temps
 function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
     return recipes.filter(recipe => {
       // Vérifier si la recette correspond au terme de recherche
@@ -187,7 +189,7 @@ function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
     });
   }
 
-// Cette fonction met à jour l'affichage des tags sélectionnés sans supprimer les tags non présents dans les résultats filtrés
+// MET à jour l'affichage des tags sélectionnés SANS SUPPRIMER les tags non présents dans les résultats filtrés
 function updateFilterOptions(recipes) {
     const filteredIngredients = new Set();
     const filteredAppliances = new Set();
@@ -214,7 +216,7 @@ function updateSelectedTagsDisplay() {
         });
     }
 }
-
+// RECHERHCE DANS MINI INPUT PAR INGREDIENT
 function attachSearchHandler(searchInput, category) {
     searchInput.addEventListener('keyup', (event) => {
         if (event.key === 'Enter') {
@@ -227,7 +229,7 @@ function attachSearchHandler(searchInput, category) {
     });
 }
 
-// POUR RECHERCHER DANS CATEGORY
+// POUR RECHERCHER PAR CATEGORY EN FONCTION DU TERME DE RECHERCHE 
 function performCategorySearch(searchTerm, category) {
     let options = new Set();
 
