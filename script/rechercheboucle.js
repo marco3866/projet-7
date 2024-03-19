@@ -124,7 +124,7 @@ function displaySelectedTag(tagText, category) {
     tag.appendChild(removeButton);
     selectedTagContainer.appendChild(tag);
 }
-
+//Cette fonction gère le clic sur une option de filtre
 function handleFilterOptionClick(option, dropdownClass) {
     let category = dropdownClass.split('-')[1];
     if (category === 'appliances') category = 'appliance';
@@ -150,6 +150,7 @@ function removeDisplayedTag(tagText, category) {
     const tagToRemove = document.querySelector(`.selected-tag[data-category="${category}"]`).textContent === tagText;
     if (tagToRemove) tagToRemove.remove();
 }
+  //Cette fonction met à jour les recettes affichées en fonction des tags actifs.
 function updateDisplayedRecipesWithActiveTags() {
     // Utiliser filterRecipesBySearchTermAndTags pour filtrer les recettes en fonction du dernier terme de recherche et des tags actifs
     const filteredRecipes = filterRecipesBySearchTermAndTags(lastSearchTerm, activeTags);
@@ -158,7 +159,7 @@ function updateDisplayedRecipesWithActiveTags() {
     updateFilterOptions(filteredRecipes);
 }
 
-// ALGORYTHME DE RECHERCHE PRICIPAL
+// ALGORYTHME DE RECHERCHE PRINCIPAL
 function filterRecipesBySearchTermAndTags(searchTerm, activeTags) {
     let filteredRecipes = [];
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -227,6 +228,7 @@ function updateFilterOptions(recipes) {
     updateDropdownOptions('dropdown-utensils', filteredUtensils);
 }
 
+//Cette fonction met à jour l'affichage des tags sélectionnés dans l'interface utilisateur
 function updateSelectedTagsDisplay() {
     const selectedTagContainer = document.querySelector('.selected-tags-container');
     selectedTagContainer.innerHTML = '';
@@ -237,7 +239,7 @@ function updateSelectedTagsDisplay() {
         });
     }
 }
-
+// RECHECHERCHER DANS INPUT PAR INGREDIENT
 function attachSearchHandler(searchInput, category) {
     searchInput.addEventListener('keyup', (event) => {
         if (event.key === 'Enter') {

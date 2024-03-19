@@ -111,7 +111,7 @@ function updateTagSets(filteredRecipes) {
     // Mettre à jour les dropdowns avec les nouveaux ensembles de tags
     updateDropdownTags();
 }
-
+// MENUS DEROULANT avec les nouveaux ensembles de tags.
 function updateDropdownTags() {
     console.log("Mise à jour des dropdowns avec les nouveaux ensembles de tags.");
     updateTags(dropdownIngredients, ingredientsSet, 'ingredients');
@@ -119,6 +119,7 @@ function updateDropdownTags() {
     updateTags(dropdownUtensils, utensilsSet, 'ustensils');
 }
 
+// MET A JOUR LES TAGS d'un menu déroulant spécifique.
 function updateTags(dropdown, tagSet, category) {
     console.log(`Mise à jour des tags pour ${category}.`);
 
@@ -136,7 +137,7 @@ function updateTags(dropdown, tagSet, category) {
         }
     });
 }
-
+// Cree un tag clickable 
 function createTag(text, category) {
     // Utilisez 'button' ou 'a' si vous voulez que chaque tag soit cliquable comme un bouton ou un lien
     const tag = document.createElement('div');

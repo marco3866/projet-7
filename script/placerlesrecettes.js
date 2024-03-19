@@ -37,6 +37,7 @@ function createRecipeCard(recipe) {
 
     return recipeCard;
 }
+// met a jour le compteur des recettes affiches 
 function updateRecipeCount(count) {
     document.querySelector('.recipes-count').textContent = `${count} RECETTES`;
 }
